@@ -335,7 +335,10 @@ function sv(){localStorage.setItem('d6s',JSON.stringify([...solved]));localStora
 let tmI=null,tmS=1200,tmR=false;
 function today(){return new Date().toISOString().slice(0,10)}
 function recAct(){const t=today();activity[t]=(activity[t]||0)+1;sv()}
-function slug(n){return n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,'-')}
+function slug(n,lc){
+const S={1:"two-sum",217:"contains-duplicate",121:"best-time-to-buy-and-sell-stock",53:"maximum-subarray",169:"majority-element",136:"single-number",268:"missing-number",283:"move-zeroes",75:"sort-colors",238:"product-of-array-except-self",560:"subarray-sum-equals-k",128:"longest-consecutive-sequence",287:"find-the-duplicate-number",189:"rotate-array",344:"reverse-string",125:"valid-palindrome",242:"valid-anagram",387:"first-unique-character-in-a-string",5:"longest-palindromic-substring",49:"group-anagrams",26:"remove-duplicates-from-sorted-array",15:"3sum",11:"container-with-most-water",42:"trapping-rain-water",643:"maximum-average-subarray-i",3:"longest-substring-without-repeating-characters",424:"longest-repeating-character-replacement",209:"minimum-size-subarray-sum",704:"binary-search",33:"search-in-rotated-sorted-array",34:"find-first-and-last-position-of-element-in-sorted-array",153:"find-minimum-in-rotated-sorted-array",74:"search-a-2d-matrix",875:"koko-eating-bananas",206:"reverse-linked-list",141:"linked-list-cycle",21:"merge-two-sorted-lists",876:"middle-of-the-linked-list",19:"remove-nth-node-from-end-of-list",234:"palindrome-linked-list",2:"add-two-numbers",20:"valid-parentheses",155:"min-stack",232:"implement-queue-using-stacks",496:"next-greater-element-i",84:"largest-rectangle-in-histogram",104:"maximum-depth-of-binary-tree",226:"invert-binary-tree",101:"symmetric-tree",543:"diameter-of-binary-tree",102:"binary-tree-level-order-traversal",98:"validate-binary-search-tree",235:"lowest-common-ancestor-of-a-binary-search-tree",230:"kth-smallest-element-in-a-bst",200:"number-of-islands",733:"flood-fill",994:"rotting-oranges",207:"course-schedule",133:"clone-graph",78:"subsets",46:"permutations",39:"combination-sum",70:"climbing-stairs",509:"fibonacci-number",198:"house-robber",322:"coin-change",1143:"longest-common-subsequence",300:"longest-increasing-subsequence",416:"partition-equal-subset-sum",62:"unique-paths",139:"word-break",55:"jump-game",56:"merge-intervals",435:"non-overlapping-intervals",31:"next-permutation",215:"kth-largest-element-in-an-array",347:"top-k-frequent-elements",73:"set-matrix-zeroes",54:"spiral-matrix",48:"rotate-image"};
+return S[lc]||n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,'-');
+}
 
 // Theme
 function togTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',c);localStorage.setItem('d6th',c);document.getElementById('thBtn').textContent=c==='dark'?'🌙':'☀️'}
@@ -471,7 +474,7 @@ function rRev(mc){
 const entries=Object.entries(revisit),due=entries.filter(([,d])=>d<=Date.now()),later=entries.filter(([,d])=>d>Date.now()).sort((a,b)=>a[1]-b[1]);
 mc.innerHTML=`<div class="ey">Spaced Repetition</div><div class="h1">🔄 Revisit Queue</div><p class="desc">Re-solve to convert short-term → permanent skill.</p>
 ${due.length?`<div style="font-weight:700;color:var(--O);margin:8px 0 4px;font-size:12px">Due Now (${due.length})</div>
-${due.map(([lc])=>{const p=P.find(x=>x.lc==lc);if(!p)return'';return`<div class="rv-card"><span style="font-weight:700;flex:1">${p.n}</span><span class="rv-due now">Due</span><a class="plc" href="https://leetcode.com/problems/${slug(p.n)}" target="_blank">LC</a><span class="rv-rm" onclick="rvRm(${lc})">✕</span></div>`;}).join('')}`:''}
+${due.map(([lc])=>{const p=P.find(x=>x.lc==lc);if(!p)return'';return`<div class="rv-card"><span style="font-weight:700;flex:1">${p.n}</span><span class="rv-due now">Due</span><a class="plc" href="https://leetcode.com/problems/${slug(p.n,p.lc)}" target="_blank">LC</a><span class="rv-rm" onclick="rvRm(${lc})">✕</span></div>`;}).join('')}`:''}
 ${later.length?`<div style="font-weight:700;color:var(--t3);margin:8px 0 4px;font-size:12px">Coming Up (${later.length})</div>
 ${later.map(([lc,d])=>{const p=P.find(x=>x.lc==lc);if(!p)return'';return`<div class="rv-card"><span style="font-weight:700;flex:1">${p.n}</span><span class="rv-due lat">in ${Math.ceil((d-Date.now())/864e5)}d</span><span class="rv-rm" onclick="rvRm(${lc})">✕</span></div>`;}).join('')}`:''}
 ${!entries.length?'<div class="empty"><div class="big">📭</div>Click ↻ on problems you struggle with.</div>':''}`;
@@ -532,7 +535,7 @@ ${alNm?`<span class="ptag" style="background:color-mix(in srgb,var(--P) 8%,var(-
 <span class="pd ${p.d}">${p.d==='E'?'Easy':p.d==='M'?'Med':'Hard'}</span>
 <span style="font-size:12px">${p.f}</span>
 <span class="prv" onclick="event.stopPropagation();tR(${p.lc})">${rv?'✓rv':'↻'}</span>
-<a class="plc" href="https://leetcode.com/problems/${slug(p.n)}" target="_blank" onclick="event.stopPropagation()">LC</a>
+<a class="plc" href="https://leetcode.com/problems/${slug(p.n,p.lc)}" target="_blank" onclick="event.stopPropagation()">LC</a>
 </div><div class="phint">${p.h}</div></div>`;
 }
 
