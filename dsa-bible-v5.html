@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Bible — Samprit's Complete Grind Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── THEME VARIABLES ─── */
+[data-theme="light"]{
+--bg:#f6f5f2;--bg2:#fff;--bg3:#eeede8;--bg4:#e5e3dc;--bg5:#dbd9d2;
+--bdr:#ddd9d0;--bdr2:#ccc8be;--t1:#1c1814;--t2:#5c564c;--t3:#8c857a;--t4:#b5ada2;
+--O:#c96b2e;--G:#2d8a5e;--B:#4070c4;--R:#c44;--P:#7c5fbf;--T:#268078;
+--cardsh:0 1px 2px rgba(0,0,0,.04);--glow:rgba(0,0,0,.02);
+}
+[data-theme="dark"]{
+--bg:#0e1015;--bg2:#161920;--bg3:#1c2028;--bg4:#242830;--bg5:#2c3040;
+--bdr:#282d38;--bdr2:#363c4a;--t1:#e2e4ea;--t2:#9298a8;--t3:#5c6274;--t4:#3e4452;
+--O:#e8944d;--G:#4db87e;--B:#6494e8;--R:#e86060;--P:#a48de0;--T:#45b4a8;
+--cardsh:0 1px 3px rgba(0,0,0,.2);--glow:rgba(255,255,255,.01);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+a{color:var(--B);text-decoration:none}a:hover{text-decoration:underline}
+
+/* ─── LAYOUT ─── */
+.app{display:flex;min-height:100vh}
+.sb{width:240px;background:var(--bg2);border-right:1px solid var(--bdr);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;transition:background .3s,border .3s}
+.sb-hd{padding:14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.sb-logo{font-size:15px;font-weight:700;letter-spacing:-.3px}.sb-logo span{color:var(--O)}
+.theme-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--bdr);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.theme-btn:hover{border-color:var(--O);background:var(--bg4)}
+.sb-nav{flex:1;padding:6px;overflow-y:auto}
+.sb-sec{font-size:10px;font-weight:700;color:var(--t4);letter-spacing:1.5px;text-transform:uppercase;padding:10px 8px 3px}
+.sb-it{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:500;color:var(--t2);transition:all .12s;position:relative}
+.sb-it:hover{background:var(--bg3);color:var(--t1)}
+.sb-it.a{background:color-mix(in srgb,var(--O) 10%,transparent);color:var(--O)}
+.sb-it.a::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2px;height:14px;background:var(--O);border-radius:2px}
+.sb-ic{width:16px;text-align:center;font-size:11px;flex-shrink:0}
+.sb-b{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 5px;border-radius:5px;background:var(--bg3);color:var(--t3)}
+.sb-ft{padding:8px 14px;border-top:1px solid var(--bdr)}
+.sb-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.sb-fill{height:100%;background:var(--O);border-radius:2px;transition:width .5s}
+.sb-ft-t{font-size:11px;color:var(--t3)}.sb-ft-t b{color:var(--O)}
+
+.mn{margin-left:240px;flex:1;transition:margin .2s}.mc{max-width:760px;margin:0 auto;padding:24px 20px 80px}
+
+/* ─── TYPOGRAPHY ─── */
+.ey{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--O);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.h1{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-.5px;margin-bottom:4px}
+.h2{font-size:15px;font-weight:700;color:var(--t1);margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+.desc{font-size:13.5px;color:var(--t2);margin-bottom:12px}
+.prose{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:6px}
+.prose strong{color:var(--t1)}.prose code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--bg3);padding:1px 4px;border-radius:3px;color:var(--O)}
+
+/* ─── STATS ─── */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.stat{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:12px 8px;text-align:center;box-shadow:var(--cardsh);transition:all .2s}
+.stat:hover{border-color:var(--bdr2);transform:translateY(-1px)}
+.stat-v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700}.stat-l{font-size:10px;color:var(--t3);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+
+/* ─── STREAK CALENDAR ─── */
+.cal-wrap{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:var(--cardsh)}
+.cal-title{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.cal-title span{font-size:11px;color:var(--t3);font-weight:500}
+.cal-grid{display:inline-grid;grid-template-columns:repeat(7,13px);gap:3px}
+.cal-day-hdr{font-size:9px;color:var(--t4);text-align:center;font-weight:600;padding:0;line-height:13px}
+.cal-day{width:13px;height:13px;border-radius:3px;background:var(--bg3);transition:all .15s;position:relative;cursor:default}
+.cal-day.today{box-shadow:inset 0 0 0 1.5px var(--O)}
+.cal-day.l1{background:color-mix(in srgb,var(--G) 25%,var(--bg3))}
+.cal-day.l2{background:color-mix(in srgb,var(--G) 45%,var(--bg3))}
+.cal-day.l3{background:color-mix(in srgb,var(--G) 70%,var(--bg3))}
+.cal-day.l4{background:var(--G)}
+.cal-day.future{opacity:.3}
+.cal-tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--t1);color:var(--bg);font-size:10px;padding:3px 8px;border-radius:4px;white-space:nowrap;z-index:10}
+.cal-day:hover .cal-tip{display:block}
+
+/* ─── PATTERN PROGRESS ─── */
+.pat-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bdr);cursor:pointer;transition:opacity .15s}
+.pat-row:hover{opacity:.8}
+.pat-ic{font-size:14px;width:20px;text-align:center}
+.pat-nm{font-size:12.5px;font-weight:600;color:var(--t1);flex:1}
+.pat-nums{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);min-width:36px;text-align:right}
+.pat-bar{width:80px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;flex-shrink:0}
+.pat-bar-fill{height:100%;border-radius:2px;transition:width .4s}
+
+/* ─── CARDS ─── */
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;box-shadow:var(--cardsh);margin-bottom:8px;overflow:hidden;transition:all .2s}
+.card:hover{border-color:var(--bdr2)}
+.card-h{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer}
+.card-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.card-t{flex:1;font-size:14px;font-weight:600;color:var(--t1)}
+.card-s{font-size:11.5px;color:var(--t3)}
+.card-b{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);background:var(--bg3);padding:2px 7px;border-radius:6px}
+.card-arr{color:var(--t4);font-size:12px;transition:transform .2s}
+.card.open .card-arr{transform:rotate(180deg)}
+.card-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.card.open .card-body{max-height:10000px}
+.card-inner{padding:2px 12px 12px}
+
+/* ─── ALGORITHM BOX ─── */
+.abox{border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--bdr);background:var(--bg2);transition:all .2s}
+.abox:hover{border-color:var(--bdr2)}
+.abox-t{font-size:14px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.abox-d{font-size:12.5px;color:var(--t2);line-height:1.65}
+.abox-d code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg3);padding:1px 4px;border-radius:3px;color:var(--O)}
+.abox-d strong{color:var(--t1)}
+.tmpl{background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:10px;margin:6px 0;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--t2);white-space:pre-wrap;overflow-x:auto}
+.spot{background:color-mix(in srgb,var(--O) 6%,var(--bg2));border-left:3px solid var(--O);padding:7px 10px;border-radius:0 6px 6px 0;margin:6px 0;font-size:12px;color:var(--t2);line-height:1.6}
+.spot::before{content:'🔍 Spot it when: ';font-weight:700;color:var(--O)}
+.cx-r{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}
+.cx{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--bg3);color:var(--t2)}
+
+/* ─── PROBLEM ROW ─── */
+.prob{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;margin-bottom:3px;overflow:hidden;transition:all .15s}
+.prob:hover{border-color:var(--bdr2)}
+.prob.done{border-color:color-mix(in srgb,var(--G) 30%,var(--bdr))}
+.prob.done .pn{color:var(--t3)}
+.pr{display:flex;align-items:center;gap:6px;padding:7px 10px;cursor:pointer}
+.pchk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;flex-shrink:0;cursor:pointer;transition:all .15s}
+.pchk:hover{border-color:var(--G)}
+.prob.done .pchk{background:var(--G);border-color:var(--G);color:#fff}
+.po{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t4);min-width:14px}
+.pn{flex:1;font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s}
+.ptag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;flex-shrink:0;white-space:nowrap;cursor:pointer;transition:opacity .15s}
+.ptag:hover{opacity:.7}
+.pd{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;flex-shrink:0}
+.pd.E{background:color-mix(in srgb,var(--G) 12%,var(--bg2));color:var(--G)}
+.pd.M{background:color-mix(in srgb,var(--O) 12%,var(--bg2));color:var(--O)}
+.pd.H{background:color-mix(in srgb,var(--R) 10%,var(--bg2));color:var(--R)}
+.plc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--O);font-weight:700;padding:2px 5px;border-radius:4px;background:var(--bg3);border:1px solid var(--bdr);flex-shrink:0;text-decoration:none;transition:all .12s}
+.plc:hover{background:color-mix(in srgb,var(--O) 10%,var(--bg2));border-color:var(--O);text-decoration:none}
+.prv{font-size:10px;font-weight:600;color:var(--T);cursor:pointer;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--T) 8%,var(--bg2));flex-shrink:0;transition:all .12s}
+.prv:hover{background:color-mix(in srgb,var(--T) 16%,var(--bg2))}
+.phint{display:none;padding:6px 12px 12px 42px;font-size:12.5px;color:var(--t2);line-height:1.7;border-top:1px solid var(--bdr)}
+.phint code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--bg3);padding:1px 4px;border-radius:3px;color:var(--O)}
+.phint strong{color:var(--t1)}
+.prob.open .phint{display:block}
+
+/* ─── FILTER BAR ─── */
+.filters{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.fbtn{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;padding:5px 12px;border-radius:14px;border:1px solid var(--bdr);background:transparent;color:var(--t3);cursor:pointer;transition:all .15s}
+.fbtn:hover{border-color:var(--bdr2);color:var(--t1)}
+.fbtn.a{background:color-mix(in srgb,var(--O) 10%,var(--bg2));border-color:var(--O);color:var(--O)}
+
+/* ─── TIMER ─── */
+.timer{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;box-shadow:var(--cardsh);padding:16px;text-align:center;margin-bottom:14px}
+.timer-d{font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:600;color:var(--t1);margin:6px 0;transition:color .3s}
+.timer-d.w{color:var(--O)}.timer-d.dn{color:var(--G);font-size:15px;line-height:2.5}
+.timer-l{font-size:12px;color:var(--t3)}
+.tbtns{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.tb{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;padding:7px 18px;border-radius:6px;border:none;cursor:pointer;transition:all .15s}
+.tb.p{background:var(--O);color:#fff}.tb.p:hover{filter:brightness(1.1)}
+.tb.s{background:var(--bg3);color:var(--t2);border:1px solid var(--bdr)}
+
+/* ─── MISC ─── */
+.motiv{background:color-mix(in srgb,var(--O) 5%,var(--bg2));border:1px solid color-mix(in srgb,var(--O) 15%,var(--bdr));border-radius:10px;padding:14px;margin-bottom:14px;text-align:center}
+.motiv-q{font-size:14px;font-style:italic;color:var(--t1);line-height:1.5}
+.motiv-a{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px}
+.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.ref-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:10px;box-shadow:var(--cardsh)}
+.ref-card h4{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.ref-card p{font-size:12px;color:var(--t2);line-height:1.55}
+.ref-card code{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:var(--bg3);padding:1px 3px;border-radius:2px;color:var(--O)}
+.rv-card{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;margin-bottom:3px;font-size:12.5px}
+.rv-due{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 7px;border-radius:5px;flex-shrink:0}
+.rv-due.now{background:color-mix(in srgb,var(--O) 12%,var(--bg2));color:var(--O)}
+.rv-due.lat{background:var(--bg3);color:var(--t3)}
+.rv-rm{cursor:pointer;color:var(--t4);font-size:12px;flex-shrink:0}.rv-rm:hover{color:var(--R)}
+.empty{text-align:center;padding:32px;color:var(--t3);font-size:13px}.empty .big{font-size:28px;margin-bottom:6px}
+.nxt{background:color-mix(in srgb,var(--O) 6%,var(--bg2));border:1px solid color-mix(in srgb,var(--O) 20%,var(--bdr));border-radius:10px;padding:12px;margin-bottom:12px;cursor:pointer;transition:all .15s}
+.nxt:hover{border-color:var(--O)}
+.mob-tog{display:none;position:fixed;top:8px;left:8px;z-index:200;width:32px;height:32px;background:var(--bg2);border:1px solid var(--bdr);border-radius:6px;cursor:pointer;color:var(--t1);font-size:13px;align-items:center;justify-content:center;box-shadow:var(--cardsh)}
+.sb-cls{display:none;position:absolute;top:10px;right:10px;background:none;border:none;color:var(--t3);font-size:14px;cursor:pointer}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}.ov.show{display:block}
+@media(max-width:768px){.sb{transform:translateX(-100%);transition:transform .25s;width:260px}.sb.open{transform:translateX(0)}.sb-cls{display:block}.mob-tog{display:flex}.mn{margin-left:0}.mc{padding:44px 10px 60px}.ref-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.phint{padding-left:10px}}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.card,.prob,.abox,.stat,.cal-wrap{animation:fi .25s ease forwards}
+</style>
+</head>
+<body>
+<button class="mob-tog" onclick="togSB()">☰</button>
+<div class="ov" id="ov" onclick="togSB()"></div>
+<div class="app">
+<aside class="sb" id="sb"><button class="sb-cls" onclick="togSB()">✕</button>
+<div class="sb-hd"><div class="sb-logo"><span>DSA</span> Bible</div><button class="theme-btn" id="thBtn" onclick="togTheme()" title="Toggle theme">🌙</button></div>
+<nav class="sb-nav" id="sN"></nav>
+<div class="sb-ft"><div class="sb-bar"><div class="sb-fill" id="sF"></div></div><div class="sb-ft-t"><b id="sC">0</b> / <b id="tC">0</b> solved</div></div>
+</aside>
+<main class="mn"><div class="mc" id="mc"></div></main>
+</div>
+<script>
+const QT=[["The struggle itself is the learning.","Your DSA Bible"],["Starting solves 95% of the problem.","You said this"],["One struggled problem > ten easy autopilots.","r/leetcode"],["Consistency at low volume beats sporadic bursts.","Research"],["You built ChefBit and shipped it. DSA is learnable.","Reality check"],["The discomfort is growth happening.","Your Bible"],["Most mediums in 20min = you're ready.","NeetCode"]];
+
+// ─── DATA: PATTERNS ───
+const PAT=[
+{id:"arr",nm:"Arrays & Hashing",ic:"▦",cl:"var(--O)",d:"40-50% of all questions at 10-15 LPA. Every company tests arrays. Cognizant's SDE sheet is array-heavy. TCS Digital's NQT always starts here.",als:["kadane","vote","dnf","prefix","xor","freq"]},
+{id:"str",nm:"Strings",ic:"Aa",cl:"var(--G)",d:"Second most tested. Capgemini emphasizes string manipulation. Palindrome checks and anagram problems at Cognizant.",als:["expand","freq"]},
+{id:"tp",nm:"Two Pointers",ic:"⟷",cl:"var(--B)",d:"3Sum is a staple. Trapping Rain Water confirmed at Capgemini and Infosys SP 2024-2025.",als:["tp_opp","tp_same"]},
+{id:"sw",nm:"Sliding Window",ic:"⊞",cl:"var(--P)",d:"Infosys SP loves this. LC #3 is universally asked.",als:["sw_var","sw_fix"]},
+{id:"bs",nm:"Binary Search",ic:"🔍",cl:"var(--O)",d:"Always tested. Rotated array confirmed at TCS Digital.",als:["bs_std","bs_ans"]},
+{id:"ll",nm:"Linked List",ic:"⟶",cl:"var(--R)",d:"Every company. Reversal, cycle detection, merge. Pen-and-paper at TCS and Infosys.",als:["floyd","rev"]},
+{id:"stk",nm:"Stack & Queue",ic:"⊟",cl:"var(--O)",d:"Valid Parentheses almost guaranteed. Monotonic Stack for Infosys HackWithInfy.",als:["mono","match"]},
+{id:"tree",nm:"Trees & BST",ic:"🌳",cl:"var(--G)",d:"Heaviest at Infosys SP and Mphasis. Level-order and BST validation most reported.",als:["bfs","dfs"]},
+{id:"graph",nm:"Graphs",ic:"⬡",cl:"var(--P)",d:"Rotting Oranges = THE most reported graph problem at Infosys. Course Schedule standard.",als:["bfs","dfs","topo"]},
+{id:"bt",nm:"Backtracking",ic:"🔙",cl:"var(--R)",d:"Subsets, permutations, combinations. Infosys SP and Mphasis SDE.",als:["bt"]},
+{id:"dp",nm:"Dynamic Programming",ic:"◫",cl:"var(--O)",d:"Dividing line between 10 and 15 LPA. Infosys SP almost always includes DP.",als:["fib_dp","knapsack","lcs_dp","grid_dp"]},
+{id:"greedy",nm:"Greedy & Intervals",ic:"💰",cl:"var(--G)",d:"Sort first, decide greedily. Merge Intervals everywhere. HackWithInfy Q2 often greedy.",als:["greedy"]},
+{id:"heap",nm:"Heap",ic:"△",cl:"var(--B)",d:"Fixed-size-K heap pattern. Kth element at Infosys SP 2024.",als:["heap_k"]},
+];
+
+// ─── DATA: ALGORITHMS (27) ───
+const AL=[
+{id:"kadane",nm:"Kadane's Algorithm",cat:"Array",ic:"📊",cl:"var(--O)",d:"Finds <strong>maximum sum contiguous subarray</strong> in O(n). Negative running sum → reset.",how:"currMax=nums[0], globalMax=nums[0]\nfor i from 1 to n-1:\n  currMax = max(nums[i], currMax+nums[i])\n  globalMax = max(globalMax, currMax)\nreturn globalMax",spot:"\"Maximum subarray\", \"largest contiguous sum\".",cx:["O(n)","O(1)"]},
+{id:"vote",nm:"Boyer-Moore Voting",cat:"Array",ic:"🗳️",cl:"var(--P)",d:"Finds <strong>majority element</strong> (>n/2) in O(1) space. Majority survives cancellation.",how:"candidate=null, count=0\nfor num:\n  if count==0: candidate=num\n  if num==candidate: count++\n  else: count--\nreturn candidate",spot:"\"Majority element\", \"element >n/2 times\".",cx:["O(n)","O(1)"]},
+{id:"dnf",nm:"Dutch National Flag",cat:"Array",ic:"🇳🇱",cl:"var(--B)",d:"<strong>3-way partition</strong> in one pass. low/mid/high pointers.",how:"low=0, mid=0, high=n-1\nwhile mid<=high:\n  if 0: swap(low,mid), low++, mid++\n  if 1: mid++\n  if 2: swap(mid,high), high--\n  ⚠️ Don't ++ mid after swap with high",spot:"\"Sort colors / 0s,1s,2s\".",cx:["O(n)","O(1)"]},
+{id:"prefix",nm:"Prefix Sum + HashMap",cat:"Array",ic:"Σ",cl:"var(--T)",d:"Precompute cumulative sums + HashMap for <strong>subarray sum = K</strong> in O(n).",how:"map={0:1}, sum=0, count=0\nfor num:\n  sum += num\n  if (sum-k) in map: count+=map[sum-k]\n  map[sum]++\nreturn count",spot:"\"Subarray sum equals K\".",cx:["O(n)","O(n)"]},
+{id:"xor",nm:"XOR Trick",cat:"Math",ic:"⊕",cl:"var(--t2)",d:"<code>a⊕a=0</code>. XOR all → <strong>pairs cancel</strong>, unique remains.",how:"result=0\nfor num: result ^= num\nreturn result",spot:"\"Single number\", \"missing number\".",cx:["O(n)","O(1)"]},
+{id:"freq",nm:"Frequency Count",cat:"String",ic:"#",cl:"var(--O)",d:"<code>int[26]</code> for lowercase. ++s1, --s2. <strong>All zeros = anagram</strong>.",how:"int[] c = new int[26]\nfor char in s1: c[ch-'a']++\nfor char in s2: c[ch-'a']--\nall zeros → anagram",spot:"\"Anagram\", \"first unique char\", \"group anagrams\".",cx:["O(n)","O(1)"]},
+{id:"expand",nm:"Expand Around Center",cat:"String",ic:"↔️",cl:"var(--G)",d:"Palindrome substrings: expand from each center (odd+even).",how:"for each i:\n  expand(i,i)    // odd\n  expand(i,i+1)  // even\nwhile l>=0 && r<n && s[l]==s[r]:\n  update longest; l--; r++",spot:"\"Longest palindromic substring\".",cx:["O(n²)","O(1)"]},
+{id:"tp_opp",nm:"Two Pointers — Opposite",cat:"Technique",ic:"⟷",cl:"var(--B)",d:"Both ends inward on <strong>sorted</strong> input. O(n) vs O(n²).",how:"l=0, r=n-1\nwhile l<r:\n  too small → l++\n  too large → r--\n  match → record",spot:"\"Two sum (sorted)\", \"container with most water\", \"3Sum\", \"trapping rain water\".",cx:["O(n)","O(1)"]},
+{id:"tp_same",nm:"Two Pointers — Same Dir",cat:"Technique",ic:"→→",cl:"var(--T)",d:"Fast scans, slow writes. <strong>In-place modifications</strong>.",how:"slow=0\nfor fast:\n  if valid: arr[slow]=arr[fast], slow++",spot:"\"Remove duplicates\", \"move zeroes\".",cx:["O(n)","O(1)"]},
+{id:"sw_var",nm:"Sliding Window — Variable",cat:"Technique",ic:"⊞",cl:"var(--P)",d:"Expand right, <strong>shrink left when violated</strong>. Longest/shortest subarray.",how:"left=0\nfor right:\n  add arr[right]\n  while violated: remove arr[left], left++\n  update answer",spot:"\"Longest substring without repeating\", \"minimum window\".",cx:["O(n)","O(k)"]},
+{id:"sw_fix",nm:"Sliding Window — Fixed K",cat:"Technique",ic:"⊡",cl:"var(--O)",d:"Window of K. <strong>Add right, remove left.</strong>",how:"init first K\nfor r from K: add arr[r], remove arr[r-K]\nupdate answer",spot:"\"Max average of K elements\".",cx:["O(n)","O(1)"]},
+{id:"bs_std",nm:"Binary Search",cat:"Search",ic:"🔍",cl:"var(--O)",d:"Halve search space. <code>mid=left+(right-left)/2</code> avoids overflow.",how:"l=0, r=n-1\nwhile l<=r:\n  m=l+(r-l)/2\n  found → return m\n  target<arr[m] → r=m-1\n  else → l=m+1",spot:"\"Search sorted\", \"rotated sorted array\".",cx:["O(log n)","O(1)"]},
+{id:"bs_ans",nm:"BS on Answer Space",cat:"Search",ic:"🎯",cl:"var(--T)",d:"Answer is monotonic → <strong>binary search the range</strong>.",how:"lo=min, hi=max\nwhile lo<hi:\n  mid=(lo+hi)/2\n  canSolve(mid) → hi=mid\n  else → lo=mid+1\nreturn lo",spot:"\"Minimize the maximum\", \"Koko eating bananas\".",cx:["O(n·log R)","O(1)"]},
+{id:"floyd",nm:"Floyd's Tortoise & Hare",cat:"Linked List",ic:"🐢",cl:"var(--G)",d:"Slow+fast. <strong>Meet→cycle.</strong> Also: middle, duplicate finding.",how:"Cycle: slow=fast=head\n  s=s.next, f=f.next.next\n  meet → cycle\nEntry: reset one to head, both +1\nMiddle: fast ends → slow=mid",spot:"\"Cycle detection\", \"find duplicate\", \"middle of list\".",cx:["O(n)","O(1)"]},
+{id:"rev",nm:"In-Place Reversal",cat:"Linked List",ic:"↩️",cl:"var(--R)",d:"Flip pointers: <strong>prev, curr, next</strong>.",how:"prev=null, curr=head\nwhile curr:\n  next=curr.next\n  curr.next=prev\n  prev=curr; curr=next\nreturn prev",spot:"\"Reverse linked list\", \"palindrome list\".",cx:["O(n)","O(1)"]},
+{id:"mono",nm:"Monotonic Stack",cat:"Stack",ic:"📈",cl:"var(--R)",d:"Stack in order. Violating element → <strong>pop (found answer)</strong>. O(n) total.",how:"for elem:\n  while stack && violates:\n    popped.answer = elem\n  push elem\nremaining → no answer",spot:"\"Next greater/smaller\", \"largest rectangle\".",cx:["O(n)","O(n)"]},
+{id:"match",nm:"Stack Matching",cat:"Stack",ic:"🔗",cl:"var(--O)",d:"Push openers, pop+compare closers. <strong>Empty at end = valid.</strong>",how:"for ch:\n  opener → push\n  closer → pop, check match\nempty → valid",spot:"\"Valid parentheses\".",cx:["O(n)","O(n)"]},
+{id:"bfs",nm:"BFS",cat:"Graph",ic:"🌊",cl:"var(--B)",d:"Level-by-level with <strong>queue</strong>. Shortest path (unweighted). Multi-source: multiple starts.",how:"add start(s) to queue\nwhile queue:\n  size=queue.size()\n  for size times:\n    node=dequeue\n    process, enqueue neighbors\n  level++",spot:"\"Shortest path\", \"level-order\", \"rotting oranges\", \"minimum steps\".",cx:["O(V+E)","O(V)"]},
+{id:"dfs",nm:"DFS",cat:"Graph",ic:"🕳️",cl:"var(--P)",d:"Go deep first. <strong>Recursion/stack.</strong> Explore fully before backtracking.",how:"mark visited\nprocess current\nfor each unvisited neighbor: recurse",spot:"\"Number of islands\", \"path exists\", \"connected components\".",cx:["O(V+E)","O(V)"]},
+{id:"topo",nm:"Topological Sort",cat:"Graph",ic:"📋",cl:"var(--T)",d:"Order DAG. <strong>Detects cycles.</strong> Kahn's algorithm with in-degree.",how:"compute in-degrees\nenqueue in-degree==0\nwhile queue:\n  dequeue → result\n  for neighbor: in-degree--\n  if 0: enqueue\nresult!=total → CYCLE",spot:"\"Course schedule\", \"build order\".",cx:["O(V+E)","O(V)"]},
+{id:"bt",nm:"Backtracking",cat:"Technique",ic:"🔙",cl:"var(--R)",d:"Build incrementally, <strong>abandon when invalid</strong>. DFS on decision tree.",how:"backtrack(curr, choices):\n  if complete → add to result\n  for valid choice:\n    add choice\n    backtrack(curr, remaining)\n    remove choice ← BACKTRACK",spot:"\"All subsets/permutations/combinations\", \"N-Queens\".",cx:["O(2^n)","O(n)"]},
+{id:"fib_dp",nm:"Fibonacci DP",cat:"DP",ic:"🔢",cl:"var(--O)",d:"State = fixed previous states. <strong>O(1) space</strong> with 2 vars.",how:"dp[0]=0, dp[1]=1\nfor i≥2: dp[i]=dp[i-1]+dp[i-2]\nOptimize: 2 variables only",spot:"\"Climbing stairs\", \"house robber\".",cx:["O(n)","O(1)"]},
+{id:"knapsack",nm:"0/1 Knapsack",cat:"DP",ic:"🎒",cl:"var(--P)",d:"Include/exclude each item. <strong>Right-to-left</strong> iteration.",how:"for item:\n  for w from cap DOWN to wt:\n    dp[w]=max(dp[w], dp[w-wt]+val)",spot:"\"Partition equal subset\", \"target sum\".",cx:["O(n·W)","O(W)"]},
+{id:"lcs_dp",nm:"LCS / 2D DP",cat:"DP",ic:"🔤",cl:"var(--B)",d:"Compare two sequences in <strong>2D table</strong>.",how:"if s1[i]==s2[j]: dp[i][j]=dp[i-1][j-1]+1\nelse: max(dp[i-1][j], dp[i][j-1])",spot:"\"Longest common subsequence\", \"edit distance\".",cx:["O(m·n)","O(m·n)"]},
+{id:"grid_dp",nm:"Grid DP",cat:"DP",ic:"🗺️",cl:"var(--T)",d:"2D grid, cell depends on <strong>above + left</strong>.",how:"dp[i][j]=dp[i-1][j]+dp[i][j-1]\nFirst row/col = base cases",spot:"\"Unique paths\", \"min path sum\".",cx:["O(m·n)","O(n)"]},
+{id:"greedy",nm:"Greedy / Activity Selection",cat:"Technique",ic:"💰",cl:"var(--G)",d:"<strong>Locally optimal → globally optimal.</strong> Sort by end time for intervals.",how:"sort by end time\nfor interval:\n  if start>=last_end: select, update",spot:"\"Merge intervals\", \"non-overlapping intervals\", \"jump game\".",cx:["O(n log n)","O(1)"]},
+{id:"heap_k",nm:"Heap Top-K",cat:"Data Structure",ic:"△",cl:"var(--B)",d:"Kth largest → <strong>min-heap size K</strong>. Top = answer.",how:"PriorityQueue (min)\nfor num:\n  offer(num)\n  if size>K: poll()\nreturn peek()",spot:"\"Kth largest/smallest\", \"top K frequent\".",cx:["O(n log k)","O(k)"]},
+];
+
+// ─── DATA: PROBLEMS (80) ───
+const P=[
+{o:1,n:"Two Sum",lc:1,d:"E",f:"🔥",pat:"arr",al:["prefix"],h:"HashMap: <code>num→index</code>. Check <code>target-num</code>. <strong>Check BEFORE insert.</strong>"},
+{o:2,n:"Contains Duplicate",lc:217,d:"E",f:"✅",pat:"arr",al:["freq"],h:"HashSet: <code>add()</code> false → dup."},
+{o:3,n:"Best Time to Buy/Sell Stock",lc:121,d:"E",f:"🔥",pat:"arr",al:["kadane"],h:"Track <code>minPrice</code>. profit=price-min."},
+{o:4,n:"Maximum Subarray",lc:53,d:"M",f:"🔥",pat:"arr",al:["kadane"],h:"<strong>Kadane's:</strong> <code>currMax=max(nums[i], currMax+nums[i])</code>."},
+{o:5,n:"Majority Element",lc:169,d:"E",f:"✅",pat:"arr",al:["vote"],h:"<strong>Boyer-Moore:</strong> candidate+counter."},
+{o:6,n:"Single Number",lc:136,d:"E",f:"✅",pat:"arr",al:["xor"],h:"<strong>XOR:</strong> <code>result^=num</code>. Pairs cancel."},
+{o:7,n:"Missing Number",lc:268,d:"E",f:"✅",pat:"arr",al:["xor"],h:"XOR 0..n with elements. Or math."},
+{o:8,n:"Move Zeroes",lc:283,d:"E",f:"✅",pat:"arr",al:["tp_same"],h:"<strong>Same-dir:</strong> slow=write pos. Swap non-zeros."},
+{o:9,n:"Sort Colors",lc:75,d:"M",f:"🔥",pat:"arr",al:["dnf"],h:"<strong>Dutch National Flag:</strong> low/mid/high."},
+{o:10,n:"Product of Array Except Self",lc:238,d:"M",f:"✅",pat:"arr",al:["prefix"],h:"Left prefix → right suffix. No division."},
+{o:11,n:"Subarray Sum Equals K",lc:560,d:"M",f:"✅",pat:"arr",al:["prefix"],h:"<strong>Prefix+HashMap:</strong> check <code>sum-K</code>. Init <code>{0:1}</code>."},
+{o:12,n:"Longest Consecutive Sequence",lc:128,d:"M",f:"✅",pat:"arr",al:[],h:"HashSet. num-1 absent = start. Count forward."},
+{o:13,n:"Find the Duplicate Number",lc:287,d:"M",f:"✅",pat:"arr",al:["floyd"],h:"<strong>Floyd's:</strong> values as pointers. Cycle entry=dup."},
+{o:14,n:"Rotate Array",lc:189,d:"M",f:"✅",pat:"arr",al:[],h:"Three reverses. k%=n first."},
+{o:15,n:"Reverse String",lc:344,d:"E",f:"🔥",pat:"str",al:["tp_opp"],h:"Two pointers: swap inward."},
+{o:16,n:"Valid Palindrome",lc:125,d:"E",f:"🔥",pat:"str",al:["tp_opp"],h:"Skip non-alphanum, compare lowercase."},
+{o:17,n:"Valid Anagram",lc:242,d:"E",f:"🔥",pat:"str",al:["freq"],h:"<strong>Freq[26]:</strong> ++s1, --s2. Zeros=anagram."},
+{o:18,n:"First Unique Character",lc:387,d:"E",f:"🔥",pat:"str",al:["freq"],h:"Freq map. First count==1."},
+{o:19,n:"Longest Palindromic Substring",lc:5,d:"M",f:"✅",pat:"str",al:["expand"],h:"<strong>Expand around center</strong> (odd+even)."},
+{o:20,n:"Group Anagrams",lc:49,d:"M",f:"✅",pat:"str",al:["freq"],h:"Sort each as key → HashMap."},
+{o:21,n:"Remove Duplicates (Sorted)",lc:26,d:"E",f:"🔥",pat:"tp",al:["tp_same"],h:"<strong>Same-dir:</strong> slow for uniques."},
+{o:22,n:"3Sum",lc:15,d:"M",f:"✅",pat:"tp",al:["tp_opp"],h:"Sort. Fix one, <strong>opposite</strong> on rest."},
+{o:23,n:"Container With Most Water",lc:11,d:"M",f:"✅",pat:"tp",al:["tp_opp"],h:"min(h[l],h[r])×(r-l). Move shorter."},
+{o:24,n:"Trapping Rain Water",lc:42,d:"H",f:"✅",pat:"tp",al:["tp_opp"],h:"leftMax/rightMax. Move shorter side."},
+{o:25,n:"Max Average Subarray I",lc:643,d:"E",f:"⬜",pat:"sw",al:["sw_fix"],h:"<strong>Fixed K:</strong> slide: +right, -left."},
+{o:26,n:"Longest Substring No Repeat",lc:3,d:"M",f:"🔥",pat:"sw",al:["sw_var"],h:"<strong>Variable window</strong>+HashSet."},
+{o:27,n:"Longest Repeating Char Replace",lc:424,d:"M",f:"⬜",pat:"sw",al:["sw_var"],h:"windowSize-maxFreq > k → shrink."},
+{o:28,n:"Min Size Subarray Sum",lc:209,d:"M",f:"⬜",pat:"sw",al:["sw_var"],h:"sum≥target → shrink left."},
+{o:29,n:"Binary Search",lc:704,d:"E",f:"🔥",pat:"bs",al:["bs_std"],h:"mid=left+(right-left)/2."},
+{o:30,n:"Search in Rotated Sorted",lc:33,d:"M",f:"✅",pat:"bs",al:["bs_std"],h:"Which half sorted? Target there?"},
+{o:31,n:"First and Last Position",lc:34,d:"M",f:"✅",pat:"bs",al:["bs_std"],h:"Two BS: leftmost + rightmost."},
+{o:32,n:"Find Min in Rotated",lc:153,d:"M",f:"✅",pat:"bs",al:["bs_std"],h:"mid vs right. mid>right → right half."},
+{o:33,n:"Search a 2D Matrix",lc:74,d:"M",f:"⬜",pat:"bs",al:["bs_std"],h:"Flatten: row=mid/cols, col=mid%cols."},
+{o:34,n:"Koko Eating Bananas",lc:875,d:"M",f:"⬜",pat:"bs",al:["bs_ans"],h:"<strong>BS on answer:</strong> speed [1,max]."},
+{o:35,n:"Reverse Linked List",lc:206,d:"E",f:"🔥",pat:"ll",al:["rev"],h:"<strong>3-pointer:</strong> curr.next=prev."},
+{o:36,n:"Linked List Cycle",lc:141,d:"E",f:"🔥",pat:"ll",al:["floyd"],h:"<strong>Floyd's:</strong> slow=1, fast=2."},
+{o:37,n:"Merge Two Sorted Lists",lc:21,d:"E",f:"🔥",pat:"ll",al:[],h:"Dummy head. Compare, attach smaller."},
+{o:38,n:"Middle of Linked List",lc:876,d:"E",f:"🔥",pat:"ll",al:["floyd"],h:"Fast ends → slow=middle."},
+{o:39,n:"Remove Nth From End",lc:19,d:"M",f:"✅",pat:"ll",al:[],h:"Gap: fast ahead by n, both move."},
+{o:40,n:"Palindrome Linked List",lc:234,d:"E",f:"✅",pat:"ll",al:["floyd","rev"],h:"Middle → reverse half → compare."},
+{o:41,n:"Add Two Numbers",lc:2,d:"M",f:"✅",pat:"ll",al:[],h:"Sum digits+carry. Final carry!"},
+{o:42,n:"Valid Parentheses",lc:20,d:"E",f:"🔥",pat:"stk",al:["match"],h:"<strong>Stack:</strong> push open, pop+check close."},
+{o:43,n:"Min Stack",lc:155,d:"M",f:"✅",pat:"stk",al:[],h:"Two stacks: values + minimums."},
+{o:44,n:"Queue using Stacks",lc:232,d:"E",f:"✅",pat:"stk",al:[],h:"Two stacks. Transfer when s2 empty."},
+{o:45,n:"Next Greater Element I",lc:496,d:"E",f:"✅",pat:"stk",al:["mono"],h:"<strong>Monotonic stack:</strong> pop smaller."},
+{o:46,n:"Largest Rect in Histogram",lc:84,d:"H",f:"✅",pat:"stk",al:["mono"],h:"<strong>Monotonic:</strong> nearest smaller L/R."},
+{o:47,n:"Max Depth Binary Tree",lc:104,d:"E",f:"✅",pat:"tree",al:["dfs"],h:"1+max(L,R). Null→0."},
+{o:48,n:"Invert Binary Tree",lc:226,d:"E",f:"✅",pat:"tree",al:["dfs"],h:"Swap left↔right recursively."},
+{o:49,n:"Symmetric Tree",lc:101,d:"E",f:"✅",pat:"tree",al:["dfs"],h:"Mirror: L.left↔R.right."},
+{o:50,n:"Diameter of Binary Tree",lc:543,d:"E",f:"✅",pat:"tree",al:["dfs"],h:"leftH+rightH. Track global max."},
+{o:51,n:"Level Order Traversal",lc:102,d:"M",f:"🔥",pat:"tree",al:["bfs"],h:"<strong>BFS+queue.</strong> size() for levels."},
+{o:52,n:"Validate BST",lc:98,d:"M",f:"✅",pat:"tree",al:["dfs"],h:"Range(min,max). L:(min,val), R:(val,max)."},
+{o:53,n:"LCA of BST",lc:235,d:"M",f:"✅",pat:"tree",al:[],h:"Both<→left. Both>→right. Split=LCA."},
+{o:54,n:"Kth Smallest in BST",lc:230,d:"M",f:"✅",pat:"tree",al:["dfs"],h:"Inorder=sorted. k-th element."},
+{o:55,n:"Number of Islands",lc:200,d:"M",f:"✅",pat:"graph",al:["dfs","bfs"],h:"DFS/BFS from '1'. Sink. Each=1 island."},
+{o:56,n:"Flood Fill",lc:733,d:"E",f:"✅",pat:"graph",al:["dfs"],h:"DFS from start. Same color→skip."},
+{o:57,n:"Rotting Oranges",lc:994,d:"M",f:"🔥",pat:"graph",al:["bfs"],h:"<strong>Multi-source BFS.</strong> Level=1 min."},
+{o:58,n:"Course Schedule",lc:207,d:"M",f:"✅",pat:"graph",al:["topo"],h:"<strong>Kahn's.</strong> result≠total → cycle."},
+{o:59,n:"Clone Graph",lc:133,d:"M",f:"⬜",pat:"graph",al:["bfs","dfs"],h:"HashMap(orig→clone). BFS/DFS."},
+{o:60,n:"Subsets",lc:78,d:"M",f:"✅",pat:"bt",al:["bt"],h:"<strong>Backtrack:</strong> include/skip. Add at every node."},
+{o:61,n:"Permutations",lc:46,d:"M",f:"✅",pat:"bt",al:["bt"],h:"<strong>Backtrack:</strong> visited. size==n → add."},
+{o:62,n:"Combination Sum",lc:39,d:"M",f:"✅",pat:"bt",al:["bt"],h:"<strong>Backtrack:</strong> reuse (same idx)."},
+{o:63,n:"Climbing Stairs",lc:70,d:"E",f:"🔥",pat:"dp",al:["fib_dp"],h:"<strong>Fib:</strong> dp[i]=dp[i-1]+dp[i-2]."},
+{o:64,n:"Fibonacci Number",lc:509,d:"E",f:"🔥",pat:"dp",al:["fib_dp"],h:"Iterative 2 vars. Asked by name."},
+{o:65,n:"House Robber",lc:198,d:"M",f:"✅",pat:"dp",al:["fib_dp"],h:"max(dp[i-1], dp[i-2]+nums[i])."},
+{o:66,n:"Coin Change",lc:322,d:"M",f:"✅",pat:"dp",al:[],h:"dp[amt]=min(dp[amt], dp[amt-coin]+1)."},
+{o:67,n:"Longest Common Subseq",lc:1143,d:"M",f:"🔥",pat:"dp",al:["lcs_dp"],h:"<strong>LCS:</strong> match→+1, else max(skip)."},
+{o:68,n:"Longest Increasing Subseq",lc:300,d:"M",f:"✅",pat:"dp",al:[],h:"O(n²) DP or O(n log n) patience."},
+{o:69,n:"Partition Equal Subset",lc:416,d:"M",f:"✅",pat:"dp",al:["knapsack"],h:"<strong>0/1 Knapsack:</strong> sum/2? R-to-L."},
+{o:70,n:"Unique Paths",lc:62,d:"M",f:"✅",pat:"dp",al:["grid_dp"],h:"<strong>Grid DP:</strong> dp[i][j]=above+left."},
+{o:71,n:"Word Break",lc:139,d:"M",f:"⬜",pat:"dp",al:[],h:"dp[i]=true if segmentable 0..i."},
+{o:72,n:"Jump Game",lc:55,d:"M",f:"✅",pat:"greedy",al:["greedy"],h:"maxReach. i>maxReach→false."},
+{o:73,n:"Merge Intervals",lc:56,d:"M",f:"✅",pat:"greedy",al:["greedy"],h:"Sort start. Overlap→extend end."},
+{o:74,n:"Non-overlapping Intervals",lc:435,d:"M",f:"⬜",pat:"greedy",al:["greedy"],h:"Sort end. Activity selection."},
+{o:75,n:"Next Permutation",lc:31,d:"M",f:"✅",pat:"greedy",al:[],h:"Rightmost ascending. Swap. Reverse."},
+{o:76,n:"Kth Largest Element",lc:215,d:"M",f:"✅",pat:"heap",al:["heap_k"],h:"<strong>Min-heap K.</strong> Poll if>K. Top=ans."},
+{o:77,n:"Top K Frequent",lc:347,d:"M",f:"⬜",pat:"heap",al:["heap_k","freq"],h:"Freq map → heap by freq, size K."},
+{o:78,n:"Set Matrix Zeroes",lc:73,d:"M",f:"✅",pat:"arr",al:[],h:"First row/col as markers."},
+{o:79,n:"Spiral Matrix",lc:54,d:"M",f:"✅",pat:"arr",al:[],h:"4 boundaries. R→D→L→U, shrink."},
+{o:80,n:"Rotate Image",lc:48,d:"M",f:"⬜",pat:"arr",al:[],h:"Transpose + reverse rows."},
+];
+
+// ─── STATE ───
+let pg='dash',sub=null,filter='all';
+let solved=new Set(),revisit={},activity={};
+try{solved=new Set(JSON.parse(localStorage.getItem('d6s')||'[]'))}catch(e){}
+try{revisit=JSON.parse(localStorage.getItem('d6r')||'{}')}catch(e){}
+try{activity=JSON.parse(localStorage.getItem('d6a')||'{}')}catch(e){}
+function sv(){localStorage.setItem('d6s',JSON.stringify([...solved]));localStorage.setItem('d6r',JSON.stringify(revisit));localStorage.setItem('d6a',JSON.stringify(activity))}
+let tmI=null,tmS=1200,tmR=false;
+function today(){return new Date().toISOString().slice(0,10)}
+function recAct(){const t=today();activity[t]=(activity[t]||0)+1;sv()}
+function slug(n){return n.toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,'-')}
+
+// Theme
+function togTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',c);localStorage.setItem('d6th',c);document.getElementById('thBtn').textContent=c==='dark'?'🌙':'☀️'}
+try{const t=localStorage.getItem('d6th');if(t){document.documentElement.setAttribute('data-theme',t);}}catch(e){}
+
+// ─── NAV ───
+function rN(){
+const el=document.getElementById('sN');let h='<div class="sb-sec">Navigate</div>';
+const pages=[['dash','🏠','Dashboard'],['queue','⏱','Practice'],['pats','🧩','Patterns'],['algos','⚡','Algorithms'],['hist','✓','Solved'],['rev','🔄','Revisit'],['ref','📋','Reference']];
+pages.forEach(([id,ic,nm])=>{
+let b='';
+if(id==='queue')b=`<span class="sb-b">${P.length-solved.size}</span>`;
+if(id==='hist')b=`<span class="sb-b">${solved.size}</span>`;
+if(id==='rev'){const d=Object.values(revisit).filter(v=>v<=Date.now()).length;if(d)b=`<span class="sb-b" style="color:var(--O)">${d}</span>`;}
+h+=`<div class="sb-it ${pg===id&&!sub?'a':''}" onclick="go('${id}')"><span class="sb-ic">${ic}</span>${nm}${b}</div>`;
+});
+h+='<div class="sb-sec">Patterns</div>';
+PAT.forEach(p=>{const d=P.filter(q=>q.pat===p.id&&solved.has(q.lc)).length,t=P.filter(q=>q.pat===p.id).length;
+h+=`<div class="sb-it ${pg==='pat'&&sub===p.id?'a':''}" onclick="goS('pat','${p.id}')"><span class="sb-ic" style="font-size:10px">${p.ic}</span><span style="font-size:11px">${p.nm}</span><span class="sb-b">${d}/${t}</span></div>`;});
+h+='<div class="sb-sec">Algorithms</div>';
+AL.forEach(a=>{h+=`<div class="sb-it ${pg==='al'&&sub===a.id?'a':''}" onclick="goS('al','${a.id}')"><span class="sb-ic" style="font-size:10px">${a.ic}</span><span style="font-size:10.5px">${a.nm}</span></div>`;});
+el.innerHTML=h;
+document.getElementById('sF').style.width=`${P.length?solved.size/P.length*100:0}%`;
+document.getElementById('sC').textContent=solved.size;document.getElementById('tC').textContent=P.length;
+document.getElementById('thBtn').textContent=document.documentElement.getAttribute('data-theme')==='dark'?'🌙':'☀️';
+}
+function go(id){pg=id;sub=null;filter='all';rN();rP();scrollTo(0,0);if(innerWidth<769)togSB()}
+function goS(t,id){pg=t;sub=id;filter='all';rN();rP();scrollTo(0,0);if(innerWidth<769)togSB()}
+function rP(){const mc=document.getElementById('mc');
+if(pg==='pat'&&sub)return rPatPg(mc);if(pg==='al'&&sub)return rAlPg(mc);
+({dash:rDash,queue:rQ,pats:rPatsH,algos:rAlH,hist:rHist,rev:rRev,ref:rRef})[pg]?.(mc);
+}
+
+// ─── DASHBOARD ───
+function rDash(mc){
+const q=QT[Math.floor(Math.random()*QT.length)],nx=P.find(p=>!solved.has(p.lc)),due=Object.values(revisit).filter(d=>d<=Date.now()).length;
+const eS=P.filter(p=>p.d==='E'&&solved.has(p.lc)).length,eT=P.filter(p=>p.d==='E').length;
+const mS=P.filter(p=>p.d==='M'&&solved.has(p.lc)).length,mT=P.filter(p=>p.d==='M').length;
+const hS=P.filter(p=>p.d==='H'&&solved.has(p.lc)).length,hT=P.filter(p=>p.d==='H').length;
+mc.innerHTML=`<div class="ey">Dashboard</div><div class="h1">Welcome back, Samprit</div><p class="desc">One problem · 20 minutes of real struggle · Every day.</p>
+<div class="motiv"><div class="motiv-q">"${q[0]}"</div><div class="motiv-a">— ${q[1]}</div></div>
+<div class="stats">
+<div class="stat"><div class="stat-v" style="color:var(--O)">${solved.size}<span style="font-size:12px;color:var(--t3)">/${P.length}</span></div><div class="stat-l">Total</div></div>
+<div class="stat"><div class="stat-v" style="color:var(--G)">${eS}<span style="font-size:12px;color:var(--t3)">/${eT}</span></div><div class="stat-l">Easy</div></div>
+<div class="stat"><div class="stat-v" style="color:var(--O)">${mS}<span style="font-size:12px;color:var(--t3)">/${mT}</span></div><div class="stat-l">Medium</div></div>
+<div class="stat"><div class="stat-v" style="color:var(--R)">${hS}<span style="font-size:12px;color:var(--t3)">/${hT}</span></div><div class="stat-l">Hard</div></div>
+<div class="stat"><div class="stat-v" style="color:${due?'var(--O)':'var(--t4)'}">${due}</div><div class="stat-l">Revisit</div></div>
+</div>
+${renderCal()}
+${nx?`<div class="nxt" onclick="go('queue')"><div style="font-size:11px;font-weight:700;color:var(--O);letter-spacing:1px;margin-bottom:2px">UP NEXT → #${nx.o}</div><div style="font-size:15px;font-weight:700">${nx.n}</div><div style="font-size:12px;color:var(--t2);margin-top:1px">${PAT.find(p=>p.id===nx.pat)?.nm} · ${nx.al.length?AL.find(a=>a.id===nx.al[0])?.nm:'General'}</div></div>`:''}
+<div class="h2">Progress by Pattern</div>
+${PAT.map(p=>{const d=P.filter(q=>q.pat===p.id&&solved.has(q.lc)).length,t=P.filter(q=>q.pat===p.id).length,pc=t?d/t*100:0;
+return`<div class="pat-row" onclick="goS('pat','${p.id}')"><span class="pat-ic">${p.ic}</span><span class="pat-nm">${p.nm}</span><span class="pat-nums">${d}/${t}</span><div class="pat-bar"><div class="pat-bar-fill" style="width:${pc}%;background:${pc===100?'var(--G)':'var(--O)'}"></div></div></div>`;}).join('')}`;
+}
+
+function renderCal(){
+const now=new Date(),days=[];
+for(let i=34;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);days.push(d)}
+const todayStr=today();
+let h=`<div class="cal-wrap"><div class="cal-title">Activity — Last 5 Weeks<span>More green = more problems</span></div><div class="cal-grid">`;
+['M','T','W','T','F','S','S'].forEach(d=>h+=`<div class="cal-day-hdr">${d}</div>`);
+// Pad start
+const startDow=days[0].getDay()||7;
+for(let i=1;i<startDow;i++)h+=`<div class="cal-day" style="opacity:0"></div>`;
+days.forEach(d=>{
+const ds=d.toISOString().slice(0,10),ct=activity[ds]||0,isToday=ds===todayStr,isFuture=d>now;
+let lvl='';if(ct>=4)lvl='l4';else if(ct>=3)lvl='l3';else if(ct>=2)lvl='l2';else if(ct>=1)lvl='l1';
+h+=`<div class="cal-day ${lvl} ${isToday?'today':''} ${isFuture?'future':''}"><div class="cal-tip">${d.toLocaleDateString('en',{month:'short',day:'numeric'})}: ${ct} problem${ct!==1?'s':''}</div></div>`;
+});
+h+=`</div></div>`;return h;
+}
+
+// ─── PRACTICE QUEUE ───
+function rQ(mc){
+const list=P.filter(p=>!solved.has(p.lc));
+mc.innerHTML=`<div class="ey">Practice Queue</div><div class="h1">⏱ Today's Grind</div><p class="desc">Timer on. Pick next. 20 min struggle. No skipping.</p>
+<div class="timer"><div class="timer-l">20-Minute Struggle Timer</div><div class="timer-d" id="tD">${fT(tmS)}</div>
+<div class="tbtns"><button class="tb p" id="tB" onclick="tTog()">${tmR?'⏸ Pause':'▶ Start'}</button><button class="tb s" onclick="tRs()">↺ Reset</button></div></div>
+<div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px">${list.length} problems remaining</div>
+${list.length?list.map(pRow).join(''):'<div class="empty"><div class="big">🎉</div>All solved!</div>'}`;
+}
+
+// ─── PATTERNS HUB ───
+function rPatsH(mc){
+mc.innerHTML=`<div class="ey">Patterns</div><div class="h1">🧩 13 Patterns</div><p class="desc">Click any pattern for its algorithms + problems.</p>
+${PAT.map(p=>{const d=P.filter(q=>q.pat===p.id&&solved.has(q.lc)).length,t=P.filter(q=>q.pat===p.id).length;
+return`<div class="card" style="cursor:pointer" onclick="goS('pat','${p.id}')"><div class="card-h"><div class="card-ic" style="background:color-mix(in srgb,${p.cl} 10%,var(--bg2));color:${p.cl}">${p.ic}</div><div style="flex:1"><div class="card-t">${p.nm}</div><div class="card-s">${p.als.length} algo${p.als.length>1?'s':''} · ${t} problems</div></div><div class="card-b">${d}/${t}</div><span class="card-arr">→</span></div></div>`;}).join('')}`;
+}
+
+// ─── PATTERN PAGE ───
+function rPatPg(mc){
+const p=PAT.find(x=>x.id===sub);if(!p)return;
+const probs=P.filter(q=>q.pat===p.id),d=probs.filter(q=>solved.has(q.lc)).length;
+const als=p.als.map(id=>AL.find(a=>a.id===id)).filter(Boolean);
+mc.innerHTML=`<div class="ey">${p.ic} Pattern</div><div class="h1">${p.nm}</div><p class="desc">${p.d}</p>
+${als.length?`<div class="h2">Algorithms</div>${als.map(a=>`<div class="abox"><div class="abox-t" style="color:${a.cl}">${a.ic} ${a.nm} <span style="font-size:10px;color:var(--t3);cursor:pointer" onclick="goS('al','${a.id}')">[details →]</span></div><div class="abox-d">${a.d}</div><div class="spot">${a.spot}</div><div class="cx-r">${a.cx.map(c=>`<span class="cx">${c}</span>`).join('')}</div></div>`).join('')}`:''}
+<div class="h2">Problems (${d}/${probs.length})</div>
+${filterBar()}${fProbs(probs).map(pRow).join('')}`;
+}
+
+// ─── ALGORITHMS HUB ───
+function rAlH(mc){
+const cats=[...new Set(AL.map(a=>a.cat))];
+mc.innerHTML=`<div class="ey">Algorithms</div><div class="h1">⚡ ${AL.length} Algorithms</div><p class="desc">Learn the algorithm FIRST, then solve its problems.</p>
+${cats.map(cat=>`<div class="h2">${cat}</div>${AL.filter(a=>a.cat===cat).map(a=>{
+const n=P.filter(p=>p.al.includes(a.id)),d=n.filter(p=>solved.has(p.lc)).length;
+return`<div class="card" style="cursor:pointer" onclick="goS('al','${a.id}')"><div class="card-h"><div class="card-ic" style="background:color-mix(in srgb,${a.cl} 10%,var(--bg2));color:${a.cl}">${a.ic}</div><div style="flex:1"><div class="card-t">${a.nm}</div><div class="card-s">${a.cat} · ${n.length} problems</div></div><div class="card-b">${d}/${n.length}</div><span class="card-arr">→</span></div></div>`;}).join('')}`).join('')}`;
+}
+
+// ─── ALGORITHM PAGE ───
+function rAlPg(mc){
+const a=AL.find(x=>x.id===sub);if(!a)return;
+const probs=P.filter(p=>p.al.includes(a.id)),d=probs.filter(p=>solved.has(p.lc)).length;
+mc.innerHTML=`<div class="ey">Algorithm</div><div class="h1">${a.ic} ${a.nm}</div>
+<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:5px;background:color-mix(in srgb,${a.cl} 10%,var(--bg2));color:${a.cl}">${a.cat}</span>
+<div class="prose" style="margin:10px 0">${a.d}</div>
+<div class="h2">Template</div><div class="tmpl">${a.how}</div>
+<div class="spot">${a.spot}</div>
+<div class="cx-r">${a.cx.map(c=>`<span class="cx">${c}</span>`).join('')}</div>
+<div class="h2">Problems (${d}/${probs.length})</div>
+${probs.map(pRow).join('')||'<div style="color:var(--t3);font-size:12px">None linked.</div>'}`;
+}
+
+// ─── SOLVED HISTORY ───
+function rHist(mc){
+const done=P.filter(p=>solved.has(p.lc));
+mc.innerHTML=`<div class="ey">History</div><div class="h1">✓ Solved Problems (${done.length})</div><p class="desc">Everything you've completed. Click to review hints.</p>
+${filterBar()}${done.length?fProbs(done).map(pRow).join(''):'<div class="empty"><div class="big">📭</div>No solved problems yet. Start grinding!</div>'}`;
+}
+
+// ─── REVISIT ───
+function rRev(mc){
+const entries=Object.entries(revisit),due=entries.filter(([,d])=>d<=Date.now()),later=entries.filter(([,d])=>d>Date.now()).sort((a,b)=>a[1]-b[1]);
+mc.innerHTML=`<div class="ey">Spaced Repetition</div><div class="h1">🔄 Revisit Queue</div><p class="desc">Re-solve to convert short-term → permanent skill.</p>
+${due.length?`<div style="font-weight:700;color:var(--O);margin:8px 0 4px;font-size:12px">Due Now (${due.length})</div>
+${due.map(([lc])=>{const p=P.find(x=>x.lc==lc);if(!p)return'';return`<div class="rv-card"><span style="font-weight:700;flex:1">${p.n}</span><span class="rv-due now">Due</span><a class="plc" href="https://leetcode.com/problems/${slug(p.n)}" target="_blank">LC</a><span class="rv-rm" onclick="rvRm(${lc})">✕</span></div>`;}).join('')}`:''}
+${later.length?`<div style="font-weight:700;color:var(--t3);margin:8px 0 4px;font-size:12px">Coming Up (${later.length})</div>
+${later.map(([lc,d])=>{const p=P.find(x=>x.lc==lc);if(!p)return'';return`<div class="rv-card"><span style="font-weight:700;flex:1">${p.n}</span><span class="rv-due lat">in ${Math.ceil((d-Date.now())/864e5)}d</span><span class="rv-rm" onclick="rvRm(${lc})">✕</span></div>`;}).join('')}`:''}
+${!entries.length?'<div class="empty"><div class="big">📭</div>Click ↻ on problems you struggle with.</div>':''}`;
+}
+
+// ─── REFERENCE ───
+function rRef(mc){
+mc.innerHTML=`<div class="ey">Reference</div><div class="h1">📋 Quick Cheatsheet</div>
+<div class="h2">Data Structures</div>
+<div class="ref-grid">
+<div class="ref-card"><h4>HashMap</h4><p>O(1) get/put. Lookup, counting. <code>HashMap&lt;K,V&gt;</code></p></div>
+<div class="ref-card"><h4>HashSet</h4><p>O(1) add/contains. Dedup.</p></div>
+<div class="ref-card"><h4>ArrayDeque</h4><p>Stack AND Queue. Faster than legacy.</p></div>
+<div class="ref-card"><h4>PriorityQueue</h4><p>Min-heap. O(log n). Top-K.</p></div>
+<div class="ref-card"><h4>TreeMap</h4><p>O(log n). Sorted. <code>floorKey()</code>.</p></div>
+<div class="ref-card"><h4>ArrayList</h4><p>O(1) access. Default list.</p></div>
+</div>
+<div class="h2">Your Process</div>
+<div style="background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:14px;box-shadow:var(--cardsh);font-size:12.5px;color:var(--t2);line-height:2">
+<strong>0–2m:</strong> Read. Constraints. Pattern?<br>
+<strong>2–5m:</strong> Brute force pseudocode.<br>
+<strong>5–15m:</strong> Optimize. What DS/algo?<br>
+<strong>15–20m:</strong> Different approach. Write ANY code.<br>
+<strong style="color:var(--O)">20m:</strong> Look up ONLY approach. Close. Code yourself.<br>
+<strong style="color:var(--G)">After:</strong> Note insight. Revisit if struggled.
+</div>`;
+}
+
+// ─── FILTER BAR ───
+function filterBar(){
+return`<div class="filters">
+<button class="fbtn ${filter==='all'?'a':''}" onclick="filter='all';rP()">All</button>
+<button class="fbtn ${filter==='unsolved'?'a':''}" onclick="filter='unsolved';rP()">Unsolved</button>
+<button class="fbtn ${filter==='solved'?'a':''}" onclick="filter='solved';rP()">Solved</button>
+<button class="fbtn ${filter==='E'?'a':''}" onclick="filter='E';rP()">Easy</button>
+<button class="fbtn ${filter==='M'?'a':''}" onclick="filter='M';rP()">Medium</button>
+<button class="fbtn ${filter==='H'?'a':''}" onclick="filter='H';rP()">Hard</button>
+</div>`;
+}
+function fProbs(list){
+return list.filter(p=>{
+if(filter==='solved')return solved.has(p.lc);
+if(filter==='unsolved')return!solved.has(p.lc);
+if(filter==='E'||filter==='M'||filter==='H')return p.d===filter;
+return true;
+});
+}
+
+// ─── PROBLEM ROW ───
+function pRow(p){
+const s=solved.has(p.lc),rv=revisit[p.lc]!==undefined;
+const alNm=p.al.length?AL.find(a=>a.id===p.al[0])?.nm:null;
+return`<div class="prob ${s?'done':''}" id="p${p.lc}" onclick="this.classList.toggle('open')">
+<div class="pr">
+<div class="pchk" onclick="event.stopPropagation();tS(${p.lc})">${s?'✓':''}</div>
+<span class="po">${p.o}</span><span class="pn">${p.n}</span>
+${alNm?`<span class="ptag" style="background:color-mix(in srgb,var(--P) 8%,var(--bg2));color:var(--P)" onclick="event.stopPropagation();goS('al','${p.al[0]}')">${alNm}</span>`:''}
+<span class="pd ${p.d}">${p.d==='E'?'Easy':p.d==='M'?'Med':'Hard'}</span>
+<span style="font-size:12px">${p.f}</span>
+<span class="prv" onclick="event.stopPropagation();tR(${p.lc})">${rv?'✓rv':'↻'}</span>
+<a class="plc" href="https://leetcode.com/problems/${slug(p.n)}" target="_blank" onclick="event.stopPropagation()">LC</a>
+</div><div class="phint">${p.h}</div></div>`;
+}
+
+// ─── ACTIONS ───
+function tS(lc){if(solved.has(lc))solved.delete(lc);else{solved.add(lc);recAct()}sv();rN();rP()}
+function tR(lc){if(revisit[lc])delete revisit[lc];else revisit[lc]=Date.now()+3*864e5;sv();rN();rP()}
+function rvRm(lc){delete revisit[lc];sv();rN();rP()}
+function togSB(){document.getElementById('sb').classList.toggle('open');document.getElementById('ov').classList.toggle('show')}
+function fT(s){return`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function tTog(){if(tmR){clearInterval(tmI);tmR=false}else{tmR=true;tmI=setInterval(()=>{tmS--;const e=document.getElementById('tD');if(e){e.textContent=fT(tmS);if(tmS<=300)e.className='timer-d w';if(tmS<=0){e.className='timer-d dn';e.textContent="⏰ TIME UP — Look up the approach now";clearInterval(tmI);tmR=false}}},1000)}const b=document.getElementById('tB');if(b)b.innerHTML=tmR?'⏸ Pause':'▶ Start'}
+function tRs(){clearInterval(tmI);tmR=false;tmS=1200;const e=document.getElementById('tD');if(e){e.textContent=fT(1200);e.className='timer-d'}const b=document.getElementById('tB');if(b)b.innerHTML='▶ Start'}
+
+rN();rP();
+</script>
+</body>
+</html>
